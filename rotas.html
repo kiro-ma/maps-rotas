@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Rotas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="../static/css/style.css">
+    <link rel="shortcut icon" href="#" />
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.13.2/datatables.min.css" />
+    <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.13.2/datatables.min.js"></script>
+
+</head>
+
+<body>
+    <nav class="navbar bg-dark">
+        <div class="container-fluid">
+            <span class="navbar-brand mb-0 h1 " style="color: white;">Planejamento de Rotas | by Kiro Marcell</span>
+            <a class="navbar-brand" href="https://github.com/kiro-ma/maps-rotas">
+                <i class="bi bi-github" style="font-size: 1.5rem;"></i>
+                github.com/kiro-ma
+            </a>
+        </div>
+    </nav>
+
+    <div id="container">
+        <div id="map"></div>
+        <div id="sidebar">
+            <p>Distância total: <span id="total"></span></p>
+            <div id="panel"></div>
+        </div>
+    </div>
+
+    <div class="row" style="padding: 15px; display: flex; align-items: center;">
+        <div class="col-sm-12 col-md-6 col-lg-6" data-bs-theme="dark">
+
+            <div class="alert alert-dark alert-dismissible fade" style="display: none;" role="alert">
+                <strong>Calma!</strong> Preencha um ponto de início e de destino.
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
+                    onclick="closeAlert()"></button>
+            </div>
+
+            <form id="rota_form">
+                <div style="margin-top: 5px; margin-bottom: 5px;">
+                    <div class="input-group m-0">
+                        <span class="input-group-text"
+                            style="background-color: #131313; color: white; border: 0; width: 12%;" id="">Início</span>
+
+                        <input type="text" class="form-control" id="start"
+                            style="background-color: #222222; color: white; border: 0;"
+                            placeholder="Digite o ponto de partida" aria-label="" aria-describedby="basic-addon1">
+                        <div class="input-group-prepend">
+
+                        </div>
+                    </div>
+                </div>
+
+                <div id="row">
+                    <!-- <div style="margin-top: 5px; margin-bottom: 5px;">
+                        <div class="input-group m-0">
+                            <span class="input-group-text" style="background-color: #131313; color: white; border: 0; width: 12%" id="">Parada ${paradas.length + 1}</span>
+
+                            <input type="text" class="form-control"
+                                style="background-color: #222222; color: white; border: 0;"
+                                placeholder="Digite uma parada" aria-label="" aria-describedby="basic-addon1">
+                            <div class="input-group-prepend">
+
+                                <button class="btn btn-outline-light" id="DeleteRow" title="Remover"
+                                    type="button"><i class="bi bi-trash3"></i></button>
+                            </div>
+                        </div>
+                    </div> -->
+                </div>
+                <div id="newinput"></div>
+
+                <div style="margin-top: 5px; margin-bottom: 5px;">
+                    <div class="input-group m-0">
+                        <span class="input-group-text"
+                            style="background-color: #131313; color: white; border: 0; width: 12%" id="">Destino</span>
+
+                        <input type="text" class="form-control" id="end"
+                            style="background-color: #222222; color: white; border: 0;" placeholder="Digite o destino"
+                            aria-label="" aria-describedby="basic-addon1">
+                        <div class="input-group-prepend">
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-2">
+                        <div class="form-group" style="margin: 5px">
+                            <input type="button" class="btn btn-dark" value="Criar Rota" onclick="run_route()">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group col-6" id="rowAdder" style="margin: 5px">
+                            <input type="button" class="btn btn-dark" value="Aicionar Parada">
+                        </div>
+                    </div>
+                    <div class="col-3">
+                        <div class="form-group" style="margin: 5px">
+                            <input type="button" class="btn btn-dark" value="Limpar rota" onclick="clearRoute(true)">
+                        </div>
+                    </div>
+                    <div class="col-4">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" id="nome_da_rota"
+                                style="background-color: #222222; color: white; border: 0;" placeholder="Nome da rota"
+                                aria-label="Example text with button addon" aria-describedby="button-addon1">
+                            <button class="btn btn-dark" type="button" style="color: white"
+                                onclick="addRouteToTable(document.getElementById('nome_da_rota').value)">Salvar</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-sm-12 col-md-6 col-lg-6">
+            <div class="card" style="color: white; background-color: #3333; border: 0;">
+
+                <table id="tableRotas" class="table table-dark table-striped table-hover"
+                    style="border-radius: 15px; color: white; white-space:pre-wrap; word-wrap:break-word">
+                    <thead>
+                        <tr>
+                            <th>Nome da rota</th>
+                            <th>Partida</th>
+                            <th>Paradas</th>
+                            <th>Destino</th>
+                            <th>Remover</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                    </tbody>
+                    <tfoot>
+                        <tr>
+                            <th>Nome da rota</th>
+                            <th>Partida</th>
+                            <th>Paradas</th>
+                            <th>Destino</th>
+                            <th>Remover</th>
+                        </tr>
+                    </tfoot>
+                </table>
+            </div>
+
+            <div class="row form-group">
+                <div class="col-6">
+                    <div class="form-group" style="margin: 5px;">
+                        <input type="button" class="btn btn-dark" value="Baixar rotas" onclick="carregarRotas()">
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="form-group" style="margin: 5px;">
+                        <input type="file" class="btn btn-dark" id="input-file">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+</body>
+<script>
+    $(document).ready(function () {
+        $('#tableRotas').DataTable({
+            scrollY: '200px',
+            scrollCollapse: true,
+            paging: false,
+            "language": {
+                "lengthMenu": "Mostrar _MENU_ resultados por página",
+                "zeroRecords": "Nada encontrado",
+                "info": "Mostrando página _PAGE_ de _PAGES_",
+                "infoEmpty": "Sem resultados disponíveis",
+                "infoFiltered": "(filtrado de _MAX_ resultados)",
+                "search": "Pesquisar"
+            },
+            columnDefs: [
+                {
+                    targets: -1,
+                    data: null,
+                    defaultContent: `<button class="btn btn-outline-light btnDelete" title="Remover"
+                                    type="button"><i class="bi bi-trash3"></i></button>`,
+                },
+            ],
+        });
+    });
+</script>
+<script type='text/javascript' src="static/js/rotas.js"></script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrFPwh63aik8WO4PQMdjiUCEQrRxg9r-U&callback=initMap&v=weekly" defer></script>
+<script type='text/javascript' src="static/js/config.js"></script>
+</html>
