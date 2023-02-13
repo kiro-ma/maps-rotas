@@ -66,22 +66,23 @@ function initMap() {
     locationButton.style.backgroundColor = '#fff';
     locationButton.style.border = 'none';
     locationButton.style.outline = 'none';
-    locationButton.style.width = '28px';
-    locationButton.style.height = '28px';
+    locationButton.style.width = '38px';
+    locationButton.style.height = '38px';
     locationButton.style.borderRadius = '2px';
     locationButton.style.boxShadow = '0 1px 4px rgba(0,0,0,0.3)';
     locationButton.style.cursor = 'pointer';
     locationButton.style.marginRight = '10px';
+    locationButton.style.marginTop = '15px';
     locationButton.style.padding = '0';
-    locationButton.title = 'Your Location';
+    locationButton.title = 'Sua localização';
     controlDiv.appendChild(locationButton);
 
     var secondChild = document.createElement('div');
-    secondChild.style.margin = '5px';
-    secondChild.style.width = '18px';
-    secondChild.style.height = '18px';
+    secondChild.style.margin = '10px';
+    secondChild.style.width = '20px';
+    secondChild.style.height = '20px';
     secondChild.style.backgroundImage = 'url(https://maps.gstatic.com/tactile/mylocation/mylocation-sprite-2x.png)';
-    secondChild.style.backgroundSize = '180px 18px';
+    secondChild.style.backgroundSize = '200px 19px';
     secondChild.style.backgroundPosition = '0 0';
     secondChild.style.backgroundRepeat = 'no-repeat';
     locationButton.appendChild(secondChild);
@@ -112,6 +113,23 @@ function initMap() {
             handleLocationError(false, infoWindow, map.getCenter());
         }
     });
+
+}
+
+//addEventListener("load", (event) => {initialize()});
+
+//google.maps.event.addDomListener(window, 'load', initialize);
+
+function initialize(element) {
+    // var input = document.getElementById(element);
+    var autocomplete = new google.maps.places.Autocomplete(element);
+    autocomplete.addListener('place_changed', function () {
+        var place = autocomplete.getPlace();
+        // place variable will have all the information you are looking for.
+        $('#lat').val(place.geometry['location'].lat());
+        $('#long').val(place.geometry['location'].lng());
+    });
+
 }
 
 function clearRoute(clear_inputs) {
@@ -131,19 +149,19 @@ function clearRoute(clear_inputs) {
 }
 
 function displayRoute(origin, destination, waypoints, service, display) {
-    service
-        .route({
-            origin: origin,
-            destination: destination,
-            travelMode: google.maps.TravelMode.DRIVING,
-            avoidTolls: true,
-            waypoints: waypoints,
-        })
+    const selectedMode = document.getElementById("mode").value;
+    service.route({
+        origin: origin,
+        destination: destination,
+        travelMode: google.maps.TravelMode[selectedMode],
+        avoidTolls: true,
+        waypoints: waypoints,
+    })
         .then((result) => {
             display.setDirections(result);
         })
         .catch((e) => {
-            alert("Não foi possível mostrar rota: " + e);
+            showAlert(e)
         });
 }
 
@@ -222,7 +240,10 @@ function addRouteToTable(nome, dataReceived) {
 }
 
 function nameRoute() {
-    document.getElementById('nome_da_rota').value = document.getElementById('start').value + '/' + document.getElementById('end').value
+    var start = document.getElementById('start').value
+    var end = document.getElementById('end').value
+
+    document.getElementById('nome_da_rota').value = start.substring(0, start.indexOf(' ')) + ' / ' + end.substring(0, end.indexOf(' '))
 }
 
 function getRouteData() {
@@ -253,6 +274,17 @@ function addRoute(data) {
 
     displayRoute(data['start'], data['end'], data['waypoints'], directionsService, directionsRenderer);
 
+    document.getElementById("mode").addEventListener("change", () => {
+        if (data['start'] && data['end']) {
+            displayRoute(data['start'], data['end'], data['waypoints'], directionsService, directionsRenderer);
+            closeAlert()
+            closeAlertCustom()
+        }
+    });
+
+    closeAlert()
+    closeAlertCustom()
+
 }
 
 function closeAlert() {
@@ -261,8 +293,18 @@ function closeAlert() {
     alertNode.style = 'display: none'
 }
 
-function showAlert() {
+function closeAlertCustom() {
+    var alertNode = document.querySelector('.alert_custom')
+    alertNode.classList.remove('show')
+    alertNode.style = 'display: none'
+}
+
+function showAlert(msg) {
     var alertNode = document.querySelector('.alert')
+    if (msg) {
+        var alertNode = document.querySelector('.alert_custom')
+        document.getElementById('alert_msg').innerText = msg
+    }
     alertNode.classList.add('show')
     alertNode.style = ''
 }
@@ -279,6 +321,8 @@ async function run_route(clear) {
 
         nameRoute()
     } else { showAlert() }
+
+
     // url = 'get/'
     // console.log(await fetchFactory('POST', url, data))
 }
@@ -319,7 +363,9 @@ function salvarRotas() {
 
 function carregarRotas() {
     const table = localStorage.getItem("table");
-    download('table.txt', table)
+    if (table != '[]') {
+        download('table.txt', table)
+    } else {showAlert('Nenhuma rota a salvar.')}
 }
 
 function download(filename, text) {
@@ -359,7 +405,7 @@ $(document).ready(function () {
         table.row($(this).parents('tr')).remove().draw();
         salvarRotas()
     });
-    
+
 });
 
 
@@ -376,7 +422,13 @@ function getFile(event) {
 
 function placeFileContent(target, file) {
     readFileContent(file).then(content => {
-        let obj = JSON.parse(content)
+        let obj
+        try {
+            obj = JSON.parse(content)
+        } catch (error) {
+            showAlert('Erro ao carregar aquivo de rotas, certifique-se de que está usando um arquivo compatível. Arquivos de rotas são gerados no botão "Baixar rotas"')
+        }
+
         addRouteToTable(obj['name'], obj)
     }).catch(error => console.log(error))
 }
@@ -401,7 +453,7 @@ $("#rowAdder").click(function () {
 
                             <input type="text" class="form-control waypoint"
                                 style="background-color: #222222; color: white; border: 0;"
-                                placeholder="Digite uma parada" aria-label="" aria-describedby="basic-addon1">
+                                placeholder="Digite uma parada" aria-label="" aria-describedby="basic-addon1" onfocus="initialize(this)">
                             <div class="input-group-prepend">
 
                                 <button class="btn btn-outline-light" id="DeleteRow" title="Remover"

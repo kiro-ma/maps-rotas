@@ -16,6 +16,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/dt/dt-1.13.2/datatables.min.css" />
     <script type="text/javascript" src="https://cdn.datatables.net/v/dt/dt-1.13.2/datatables.min.js"></script>
 
+
 </head>
 
 <body>
@@ -37,6 +38,16 @@
         </div>
     </div>
 
+    <div id="floating-panel" style="margin: 5px; color: white;">
+        <b>Modo de viagem: </b>
+        <select id="mode">
+            <option value="DRIVING">Dirigindo</option>
+            <option value="WALKING">Caminhando</option>
+            <option value="BICYCLING">Pedalando</option>
+            <option value="TRANSIT">Caminhando/Ônibus</option>
+        </select>
+    </div>
+
     <div class="row" style="padding: 15px; display: flex; align-items: center;">
         <div class="col-sm-12 col-md-6 col-lg-6" data-bs-theme="dark">
 
@@ -46,6 +57,12 @@
                     onclick="closeAlert()"></button>
             </div>
 
+            <div class="alert alert_custom alert-dark alert-dismissible fade" style="display: none;" role="alert">
+                <p id="alert_msg">Preencha um ponto de início e de destino.</p>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
+                    onclick="closeAlertCustom()"></button>
+            </div>
+            
             <form id="rota_form">
                 <div style="margin-top: 5px; margin-bottom: 5px;">
                     <div class="input-group m-0">
@@ -54,7 +71,8 @@
 
                         <input type="text" class="form-control" id="start"
                             style="background-color: #222222; color: white; border: 0;"
-                            placeholder="Digite o ponto de partida" aria-label="" aria-describedby="basic-addon1">
+                            placeholder="Digite o ponto de partida" aria-label="" aria-describedby="basic-addon1"
+                            onfocus="initialize(this)">
                         <div class="input-group-prepend">
 
                         </div>
@@ -86,7 +104,7 @@
 
                         <input type="text" class="form-control" id="end"
                             style="background-color: #222222; color: white; border: 0;" placeholder="Digite o destino"
-                            aria-label="" aria-describedby="basic-addon1">
+                            aria-label="" aria-describedby="basic-addon1" onfocus="initialize(this)">
                         <div class="input-group-prepend">
 
                         </div>
@@ -165,10 +183,8 @@
             </div>
         </div>
     </div>
-
-
-
 </body>
+
 <script>
     $(document).ready(function () {
         $('#tableRotas').DataTable({
@@ -195,5 +211,14 @@
     });
 </script>
 <script type='text/javascript' src="rotas.js"></script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrFPwh63aik8WO4PQMdjiUCEQrRxg9r-U&callback=initMap&v=weekly" defer></script>
+
+<script
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyBrFPwh63aik8WO4PQMdjiUCEQrRxg9r-U&callback=initMap&v=weekly&libraries=places"
+    defer></script>
+<script>
+
+
+
+</script>
+
 </html>
