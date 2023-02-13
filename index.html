@@ -31,14 +31,16 @@
     </nav>
 
     <div id="container">
+
+
         <div id="map"></div>
-        <div id="sidebar">
-            <p>Distância total: <span id="total"></span></p>
-            <div id="panel"></div>
-        </div>
+
+
+
+
     </div>
 
-    <div id="floating-panel" style="margin: 5px; color: white;">
+    <div id="floating-panel" style="margin: 5px; color: white;" class="col-sm-12">
         <b>Modo de viagem: </b>
         <select id="mode">
             <option value="DRIVING">Dirigindo</option>
@@ -49,7 +51,7 @@
     </div>
 
     <div class="row" style="padding: 15px; display: flex; align-items: center;">
-        <div class="col-sm-12 col-md-6 col-lg-6" data-bs-theme="dark">
+        <div class="col-sm-12 col-md-4 col-lg-4" data-bs-theme="dark">
 
             <div class="alert alert-dark alert-dismissible fade" style="display: none;" role="alert">
                 <strong>Calma!</strong> Preencha um ponto de início e de destino.
@@ -62,12 +64,12 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"
                     onclick="closeAlertCustom()"></button>
             </div>
-            
+
             <form id="rota_form">
                 <div style="margin-top: 5px; margin-bottom: 5px;">
                     <div class="input-group m-0">
                         <span class="input-group-text"
-                            style="background-color: #131313; color: white; border: 0; width: 12%;" id="">Início</span>
+                            style="background-color: #131313; color: white; border: 0; width: 20%;" id="">Início</span>
 
                         <input type="text" class="form-control" id="start"
                             style="background-color: #222222; color: white; border: 0;"
@@ -100,7 +102,7 @@
                 <div style="margin-top: 5px; margin-bottom: 5px;">
                     <div class="input-group m-0">
                         <span class="input-group-text"
-                            style="background-color: #131313; color: white; border: 0; width: 12%" id="">Destino</span>
+                            style="background-color: #131313; color: white; border: 0; width: 20%" id="">Destino</span>
 
                         <input type="text" class="form-control" id="end"
                             style="background-color: #222222; color: white; border: 0;" placeholder="Digite o destino"
@@ -112,22 +114,22 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-2">
+                    <div class="col-sm-6 col-md-2 col-lg-2">
                         <div class="form-group" style="margin: 5px">
                             <input type="button" class="btn btn-dark" value="Criar Rota" onclick="run_route()">
                         </div>
                     </div>
-                    <div class="col-3">
+                    <div class="col-sm-6 col-md-3 col-lg-3">
                         <div class="form-group col-6" id="rowAdder" style="margin: 5px">
                             <input type="button" class="btn btn-dark" value="Aicionar Parada">
                         </div>
                     </div>
-                    <div class="col-3">
+                    <div class="col-sm-6 col-md-3 col-lg-3">
                         <div class="form-group" style="margin: 5px">
                             <input type="button" class="btn btn-dark" value="Limpar rota" onclick="clearRoute(true)">
                         </div>
                     </div>
-                    <div class="col-4">
+                    <div class="col-sm-6 col-md-4 col-lg-4">
                         <div class="input-group mb-3">
                             <input type="text" class="form-control" id="nome_da_rota"
                                 style="background-color: #222222; color: white; border: 0;" placeholder="Nome da rota"
@@ -140,7 +142,7 @@
             </form>
         </div>
 
-        <div class="col-sm-12 col-md-6 col-lg-6">
+        <div class="col-sm-12 col-md-5 col-lg-5">
             <div class="card" style="color: white; background-color: #3333; border: 0;">
 
                 <table id="tableRotas" class="table table-dark table-striped table-hover"
@@ -169,15 +171,27 @@
                 </table>
             </div>
 
-            <div class="row form-group">
-                <div class="col-6">
-                    <div class="form-group" style="margin: 5px;">
-                        <input type="button" class="btn btn-dark" value="Baixar rotas" onclick="carregarRotas()">
+                <div class="row form-group">
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <div class="form-group" style="margin: 5px;">
+                            <input type="button" class="btn btn-dark" value="Baixar rotas" onclick="carregarRotas()">
+                        </div>
+                    </div>
+                    <div class="col-sm-12 col-md-6 col-lg-6">
+                        <div class="form-group" style="margin: 5px;">
+                            <input type="file" class="btn btn-dark" id="input-file">
+                        </div>
                     </div>
                 </div>
-                <div class="col-6">
-                    <div class="form-group" style="margin: 5px;">
-                        <input type="file" class="btn btn-dark" id="input-file">
+        </div>
+
+        <div class="col-sm-12 col-md-3 col-lg-3">
+            <div class="card" style="height: 200px; overflow-y: auto; border: none;">
+                <div class="card-body">
+                    <h5 class="card-title">Detalhes da rota</h5>
+                    <div id="sidebar">
+                        <p>Distância total: <span id="total"></span></p>
+                        <div id="panel"></div>
                     </div>
                 </div>
             </div>

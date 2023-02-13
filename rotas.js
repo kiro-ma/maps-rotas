@@ -449,7 +449,7 @@ $("#rowAdder").click(function () {
         `<div id="row">
                     <div style="margin-top: 5px; margin-bottom: 5px;">
                         <div class="input-group m-0">
-                            <span class="input-group-text" style="background-color: #131313; color: white; border: 0; width: 12%" id="">Parada ${paradas.length + 1}</span>
+                            <span class="input-group-text" style="background-color: #131313; color: white; border: 0; width: 20%" id="">Parada ${paradas.length + 1}</span>
 
                             <input type="text" class="form-control waypoint"
                                 style="background-color: #222222; color: white; border: 0;"
