@@ -227,7 +227,7 @@ function nameRoute() {
 
 function getRouteData() {
     return {
-        key: config.ROTAS_KEY,
+        key: "AIzaSyBrFPwh63aik8WO4PQMdjiUCEQrRxg9r-U",
         start: document.getElementById('start').value,
         end: document.getElementById('end').value,
         waypoints: get_paradas(true)
@@ -346,7 +346,7 @@ $(document).ready(function () {
         }
 
         data = {
-            key: config.ROTAS_KEY,
+            key: "AIzaSyBrFPwh63aik8WO4PQMdjiUCEQrRxg9r-U",
             start: routeData[1],
             end: routeData[3],
             waypoints: paradas
